@@ -20,7 +20,15 @@ function appendToDisplay(value) {
         display.value = value;
     } else if (currentValue === '0' && value === '.') {
         display.value = currentValue + value;
-    } else {
+    } else if (value === '.') {
+        //Get the last number in the display
+        let lastNumber = currentValue.split('/[+\-*/]').pop();
+        //Only add the decimal if the current number doesnt have one
+        if (!lastNumber.includes('.')) {
+            display.value = currentValue + value
+        }
+
+    }else {
         display.value = currentValue + value;
     }
 
@@ -33,7 +41,14 @@ function appendToDisplay(value) {
 function clearDisplay() {
     console.log('Clear button pressed.');
 
-    alert('Clear button was clicked'); 
+    display.value = '0';
+    justCalculated = false;
+
+    display.style.background = '#f0f0f0';
+    setTimeout(() => {
+        display.style.background = '';
+    }, 150);
+
 }
 
 function deleteLast() {
@@ -47,8 +62,7 @@ function deleteLast() {
     } else {
         display.value = currentValue.slice(0, -1);
     }
-
-    alert('Backspace button was clicked');  
+    
 }
 
 function calculate() {
@@ -56,6 +70,33 @@ function calculate() {
 
     alert('Equals button was clicked');
 }
+
+document.addEventListener('keydown', function (event) {
+    console.log('key pressed', event.key);
+
+    if (event.key >= '0' && event.key <= '9') {
+        appendToDisplay(event.key);
+    } else if (event.key === '.') {
+        appendToDisplay('.');
+    } else if (event.key === '+') {
+        appendToDisplay('+');
+    } else if (event.key === '-') {
+        appendToDisplay('-');
+    } else if (event.key === '*') {
+        appendToDisplay('*');
+    } else if (event.key === '/') {
+        event.preventDefault();
+        appendToDisplay('/');
+    }
+
+    else if (event.key === 'Enter' || event.key === '=') {
+        calculate();
+    } else if (event.key === 'Escape' || event.key === 'c' || event.key === 'C') {
+        clearDisplay();
+    } else if (event.key === 'Backspace') {
+        deleteLast();
+    }
+})
 
 document.addEventListener('DOMContentLoaded', function name() {
     console.log('Calculator loaded successfully');
